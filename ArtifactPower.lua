@@ -16,7 +16,7 @@ function f:OnLoad()
 	f:RegisterEvent("BAG_UPDATE_DELAYED");	
 	f:RegisterEvent("ADDON_LOADED");
 	tooltipScanner = CreateFrame("GameTooltip", tooltipName, nil, "GameTooltipTemplate")
-	ldbPower = ldb:NewDataObject("Artifact Power", { type = "data source", label ="", text = "", icon = "Interface\\ICONS\\INV_Artifact_XP05"});
+	ldbPower = ldb:NewDataObject("Artifact Power", { type = "data source", label ="Artifact Power", text = "", icon = "Interface\\ICONS\\INV_Artifact_XP05"});
 	brokenIslesZones =  { GetMapZones(8) } ;
 end
 
