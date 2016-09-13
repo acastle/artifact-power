@@ -1,6 +1,6 @@
 ## Interface: 70000
 ## Title: Artifact Power
-## Version: 1.0.2
+## Version: 1.1
 ## Author: Dorwido
 ## Notes: Show current Artifact Power, in Bags and possible gain from Worldquest
 ## SavedVariables: ArtifactPowerGlobalConfig
@@ -8,5 +8,6 @@
 libs\LibStub.lua
 libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
 libs\libdatabroker-1-1\LibDataBroker-1.1.lua
+libs\AceGUI-3.0\AceGUI-3.0.xml
 ArtifactPowerConfig.lua
 ArtifactPower.lua
