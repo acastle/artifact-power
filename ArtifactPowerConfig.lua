@@ -1,5 +1,18 @@
 local config = CreateFrame("Frame");
-local defaultconf = {["IncludePvP"]=true,["GlobalConf"]=true, 
+local excludeList = {
+	[2] = "Profession",
+	[4] = "PvP",
+	[5] = "Pet Battle",
+	[7] = "Dungeon",
+}
+local defaultconf = {
+["GlobalConf"]=true, 
+["ExcludeList"] = {
+	[2] = false,
+	[4] = false,
+	[5] = false,
+	[7] = false,
+},
 ["DisplayString"] = "(#currentPower#/#bagPower#/#worldQuestPower#/#worldQuestPowerLooseSoon#/#powerNextLevel#)",
 ["colorpowerNextLevel"] = {
 		0.803921568627451, -- [1]
@@ -31,7 +44,14 @@ local defaultconf = {["IncludePvP"]=true,["GlobalConf"]=true,
 		0.580392156862745, -- [2]
 		0, -- [3]
 		1, -- [4]
+	},
+	["colorpowerNextLevelLeft"] = {
+		0.992156862745098, -- [1]
+		0, -- [2]
+		0, -- [3]
+		1, -- [4]
 	}
+	
 }
 local config2 = CreateFrame("Frame");
 local addonName,ns = ...
@@ -81,7 +101,7 @@ function config:Init()
 	config.parent="Artifact Power";
 	
 	CreateCheckbox(config,"GlobalConf","Global Configuration","If checked this character uses the global configuration, uncheck to use different options for this character");
-	CreateCheckbox(config,"IncludePvP","Include PvP Worldquest","If unchecked possible gain from Worldquest will exclude PvP Worldquest in the calculation");
+	
 	
 	local AceGUI = LibStub("AceGUI-3.0")
 	
@@ -108,18 +128,32 @@ function config:Init()
 		ns.config = ArtifactPowerLocalConfig;
 	end
 	
+	local excludeListConfig = AceGUI:Create("Dropdown")
+		excludeListConfig.frame:SetParent(config);
+		excludeListConfig:SetLabel("Exclude the following types of possible Artifact Power gain");
+		excludeListConfig:SetList(excludeList)
+		excludeListConfig:SetMultiselect(true)
+		excludeListConfig:SetPoint( "TOPLEFT" , lastattached[config.name],"BOTTOMLEFT",0,0);
+		for key, val in pairs(ns.config.ExcludeList) do
+			excludeListConfig:SetItemValue(key,val)
+		end
+		excludeListConfig.frame:Show(true)
+		
+		excludeListConfig:SetCallback("OnValueChanged",function(self,event,key,checked)
+			ns.config.ExcludeList[key] = checked
+		end)
+	
 	local textString = AceGUI:Create("EditBox")
 		
 		textString.frame:SetParent(config);
 		textString:SetWidth(600)
 		textString:SetLabel("Text to show in Broker");
-		textString:SetPoint( "TOPLEFT", lastattached[config.name], "BOTTOMLEFT", 0, 0);
+		textString:SetPoint( "TOPLEFT", excludeListConfig.frame, "BOTTOMLEFT", 0, 0);
 		textString:SetText(ns.config.DisplayString)
 		
 		textString.frame:Show(true)
-		textString:SetCallback("OnValueChanged",function(self,event,value)
-			--showTimer:SetValue(value);
-			--timerConfig.showTimer = value;		
+		textString:SetCallback("OnEnterPressed",function(self,event,value)
+			ns.config.DisplayString = value;		
 			end)
 			
 	local colorCurrentPower = AceGUI:Create("ColorPicker")
@@ -128,6 +162,7 @@ function config:Init()
 		colorCurrentPower:SetHasAlpha(true);
 		colorCurrentPower:SetPoint( "TOPLEFT" , textString.frame,"BOTTOMLEFT",0,0);
 		colorCurrentPower.frame:Show(true)
+		colorCurrentPower:SetWidth(300)
 		colorCurrentPower:SetColor(unpack(ns.config.colorcurrentPower));
 		colorCurrentPower:SetCallback("OnValueConfirmed",function(self,event,r,g,b,a)
 			ns.config.colorcurrentPower = {r,g,b,a}
@@ -139,6 +174,7 @@ function config:Init()
 		colorBagPower:SetHasAlpha(true);
 		colorBagPower:SetPoint("TOPLEFT" , colorCurrentPower.frame,"BOTTOMLEFT",0,0);
 		colorBagPower.frame:Show(true)
+		colorBagPower:SetWidth(300)
 		colorBagPower:SetColor(unpack(ns.config.colorbagPower));
 		colorBagPower:SetCallback("OnValueConfirmed",function(self,event,r,g,b,a)
 			ns.config.colorbagPower = {r,g,b,a}
@@ -150,6 +186,7 @@ function config:Init()
 		colorWorldQuestPower:SetHasAlpha(true);
 		colorWorldQuestPower:SetPoint( "TOPLEFT" , colorBagPower.frame,"BOTTOMLEFT",0,0);
 		colorWorldQuestPower.frame:Show(true)
+		colorWorldQuestPower:SetWidth(300)
 		colorWorldQuestPower:SetColor(unpack(ns.config.colorworldQuestPower));
 		colorWorldQuestPower:SetCallback("OnValueConfirmed",function(self,event,r,g,b,a)
 			ns.config.colorworldQuestPower = {r,g,b,a}
@@ -161,6 +198,7 @@ function config:Init()
 		colorWorldQuestPowerLooseSoon:SetHasAlpha(true);
 		colorWorldQuestPowerLooseSoon:SetPoint( "TOPLEFT" , colorWorldQuestPower.frame,"BOTTOMLEFT",0,0);
 		colorWorldQuestPowerLooseSoon.frame:Show(true)
+		colorWorldQuestPowerLooseSoon:SetWidth(300)
 		colorWorldQuestPowerLooseSoon:SetColor(unpack(ns.config.colorworldQuestPowerLooseSoon));
 		colorWorldQuestPowerLooseSoon:SetCallback("OnValueConfirmed",function(self,event,r,g,b,a)
 			ns.config.colorworldQuestPowerLooseSoon = {r,g,b,a}
@@ -170,12 +208,28 @@ function config:Init()
 		colorPowerNextLevel.frame:SetParent(config);
 		colorPowerNextLevel:SetLabel("#powerNextLevel#");
 		colorPowerNextLevel:SetHasAlpha(true);
+		colorPowerNextLevel:SetWidth(300)
 		colorPowerNextLevel:SetPoint( "TOPLEFT" , colorWorldQuestPowerLooseSoon.frame,"BOTTOMLEFT",0,0);
 		colorPowerNextLevel.frame:Show(true)
 		colorPowerNextLevel:SetColor(unpack(ns.config.colorpowerNextLevel));
 		colorPowerNextLevel:SetCallback("OnValueConfirmed",function(self,event,r,g,b,a)
 			ns.config.colorpowerNextLevel = {r,g,b,a}
 		end)
+		
+	local colorPowerNextLevelLeft = AceGUI:Create("ColorPicker")
+		colorPowerNextLevelLeft.frame:SetParent(config);
+		colorPowerNextLevelLeft:SetLabel("#powerNextLevelLeft#");
+		colorPowerNextLevelLeft:SetHasAlpha(true);
+		colorPowerNextLevelLeft:SetWidth(300)
+		colorPowerNextLevelLeft:SetPoint( "TOPLEFT" , colorPowerNextLevel.frame,"BOTTOMLEFT",0,0);
+		colorPowerNextLevelLeft.frame:Show(true)
+		colorPowerNextLevelLeft:SetColor(unpack(ns.config.colorpowerNextLevelLeft));
+		colorPowerNextLevelLeft:SetCallback("OnValueConfirmed",function(self,event,r,g,b,a)
+			ns.config.colorpowerNextLevelLeft = {r,g,b,a}
+		end)
+	if not ns.config.frame_secure_pos then
+		ns.config.frame_secure_pos = {};
+	end
 	
 	config:SetCurrentConfig();
 end
@@ -183,7 +237,7 @@ end
 
 function config:SetCurrentConfig()
 	for key, _ in pairs(defaultconf) do
-		if(key=="IncludePvP" or key == "GlobalConf") then	
+		if(key == "GlobalConf") then	
 			_G["ArtifactPower_"..key]:SetChecked(ns.config[key])
 		end
 		
