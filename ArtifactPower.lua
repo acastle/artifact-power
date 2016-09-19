@@ -32,7 +32,7 @@ function f:OnLoad()
 
 	
 	tooltipScanner = CreateFrame("GameTooltip", tooltipName, nil, "GameTooltipTemplate")
-	ldbPower = ldb:NewDataObject("Artifact Power", { type = "data source", label ="Artifact Power", text = "", icon = "Interface\\ICONS\\INV_Artifact_XP05",OnTooltipShow = function (self) self:AddLine("Left click to show/hide the Artifact Power Bar |nRight click to open the config") end, OnClick = f.DataBrokerClick});
+	ldbPower = ldb:NewDataObject("Artifact Power", { type = "data source", label ="Artifact Power", text = "", icon = "Interface\\ICONS\\INV_Artifact_XP05",OnTooltipShow = function (self) self:AddLine("Left click to show/hide the Artifact Power Button Bar |nRight click to open the config") end, OnClick = f.DataBrokerClick});
 	brokenIslesZones =  { GetMapZones(8) } ;
 end
 
@@ -98,7 +98,9 @@ function f:CheckBags()
 		f:HideSecureButtons()
 		f:ShowButtonBar()
 	end
-	apStats.powerNextLevelLeft = apStats.powerNextLevel - apStats.bagPower - apStats.currentPower
+	if apStats.powerNextLevel ~= nil then
+		apStats.powerNextLevelLeft = apStats.powerNextLevel - apStats.bagPower - apStats.currentPower
+	end
 end
 
 function f:HideSecureButtons()
@@ -196,6 +198,7 @@ function f:ScanBank()
 				powerGain = f:GetItemLinkArtifactPower(itemLink);
 				if(powerGain~=nil) then
 					ns.bankPower = ns.bankPower + powerGain						
+					
 				end
 			end
 		end
@@ -212,6 +215,7 @@ function f:ScanBank()
 						
 						powerGain = f:GetItemLinkArtifactPower(itemLink);
 						if(powerGain~=nil) then
+							
 						
 							ns.bankPower = ns.bankPower + powerGain						
 						end
