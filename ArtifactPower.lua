@@ -66,6 +66,7 @@ function f:ShowButtonBar()
 end
 
 function f:CheckBags()	
+	
 	f:GetArtifactInfos()
 	f:ScanWorldQuests();
 	apStats.bagPower = 0;
@@ -269,6 +270,7 @@ function f:EventHandler(event,...)
 end
 
 function f:ScanWorldQuests()
+
 	local index,value,worldQuests,timeLeft,i,itemLink,ap,itemID,worldQuestType,exclude,_;
 	apStats.worldQuestPower = 0;
 	apStats.worldQuestPowerLooseSoon = 0;
@@ -281,12 +283,13 @@ function f:ScanWorldQuests()
 			if worldQuests then					
 				for i = 1, #worldQuests do
 					exclude = false
-					if ns.config["IncludePvP"] == false then
+					
 						_, _, worldQuestType = GetQuestTagInfo(worldQuests[i].questId);
+						
 						if ns.config.ExcludeList[worldQuestType] ~= nil and ns.config.ExcludeList[worldQuestType] == true then
 							exclude = true
 						end
-					end
+					
 					timeLeft = C_TaskQuest.GetQuestTimeLeftMinutes(worldQuests[i].questId)
 					if timeLeft > 0 and exclude == false then
 						questId = worldQuests[i].questId

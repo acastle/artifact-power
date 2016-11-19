@@ -1,17 +1,17 @@
 local config = CreateFrame("Frame");
 local excludeList = {
-	[2] = "Profession",
-	[4] = "PvP",
-	[5] = "Pet Battle",
-	[7] = "Dungeon",
+	[LE_QUEST_TAG_TYPE_PROFESSION] = "Profession",
+	[LE_QUEST_TAG_TYPE_PVP] = "PvP",
+	[LE_QUEST_TAG_TYPE_PET_BATTLE] = "Pet Battle",
+	[LE_QUEST_TAG_TYPE_DUNGEON] = "Dungeon",
 }
 local defaultconf = {
 ["GlobalConf"]=true, 
 ["ExcludeList"] = {
-	[2] = false,
-	[4] = false,
-	[5] = false,
-	[7] = false,
+	[LE_QUEST_TAG_TYPE_PROFESSION] = false,
+	[LE_QUEST_TAG_TYPE_PVP] = false,
+	[LE_QUEST_TAG_TYPE_PET_BATTLE] = false,
+	[LE_QUEST_TAG_TYPE_DUNGEON] = false,
 },
 ["DisplayString"] = "(#currentPower#/#bagPower#/#worldQuestPower#/#worldQuestPowerLooseSoon#/#powerNextLevel#)",
 ["colorpowerNextLevel"] = {

@@ -1,6 +1,6 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: Artifact Power
-## Version: 1.2.1
+## Version: 1.2.2
 ## Author: Dorwido
 ## Notes: Show current Artifact Power, in Bags and possible gain from Worldquest
 ## SavedVariables: ArtifactPowerGlobalConfig
