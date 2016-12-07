@@ -91,7 +91,7 @@ function f:CheckBags()
 	for bag = 0, 4 do	
 		for slot = 1, GetContainerNumSlots(bag) do
 			itemLink = GetContainerItemLink(bag, slot)
-			powerGain = f:GetItemLinkArtifactPower(itemLink);
+			powerGain = f:GetItemLinkArtifactPower(itemLink,1);
 			if(powerGain~=nil) then
 				apStats.bagPower = apStats.bagPower + powerGain	
 				_, count, _, _, _, _, _, _, _, itemID = GetContainerItemInfo(bag, slot)
@@ -384,22 +384,28 @@ function f:GetArtifactInfos()
 
 end
 
-function f:GetItemLinkArtifactPower(itemLink)
+function f:GetItemLinkArtifactPower(itemLink, baggy)
     if itemLink then
         local itemSpell = GetItemSpell(itemLink)
         if itemSpell and itemSpell == empoweringSpellName then
             tooltipScanner:SetOwner(UIParent, "ANCHOR_NONE")
             tooltipScanner:SetHyperlink (itemLink)
 			local i
+			--if baggy ~= nil then
+				--print ("ap item found")
+			--end
 			for i=tooltipScanner:NumLines(),1,-1 do
 			
 				local tooltipText = _G[tooltipName.."TextLeft"..i]:GetText()
-				
+				--if baggy ~= nil then
+				--	print (tooltipText)
+				--end
 				if(tooltipText ~= nil) then
 					 local ap = tooltipText:gsub("[,%.]", ""):match(apStringLocal) or ""
-					
-					tooltipScanner:Hide()			
-					return tonumber(ap);
+					if ap ~= "" then
+						tooltipScanner:Hide()			
+						return tonumber(ap);
+					end
 					
 				end
 			--matcher = "Grants (%d+) Artifact Power to your currently equipped Artifact"
