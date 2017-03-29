@@ -358,10 +358,11 @@ end
 
 function f:GetTotalRanks()
 	totalApRanksPurchased = C_ArtifactUI.GetTotalPurchasedRanks()
+	local artifactTier = ({C_ArtifactUI.GetEquippedArtifactInfo()})[13];
 	local totalCost = 0
 	local lastTotalCost = 0
 	for i=1,totalApRanks do
-		totalCost = totalCost + C_ArtifactUI.GetCostForPointAtRank(i);
+		totalCost = totalCost + C_ArtifactUI.GetCostForPointAtRank(i, artifactTier);
 		if(lastTotalCost>0) then
 			local percent = totalCost / lastTotalCost 			
 		end
@@ -373,9 +374,9 @@ end
 
 function f:GetArtifactInfos()	
 	
-	local itemID, altItemID, name, icon, totalXP, pointsSpent, quality, artifactAppearanceID, appearanceModID, itemAppearanceID, altItemAppearanceID, altOnTop = C_ArtifactUI.GetEquippedArtifactInfo();
-	 if(pointsSpent == nil) then return; end
-	local numPointsAvailableToSpend, xp , xpForNextPoint = MainMenuBar_GetNumArtifactTraitsPurchasableFromXP(pointsSpent, totalXP);
+	local _, _, _, _, totalXP, pointsSpent, _, _, _, _, _, _, artifactTier = C_ArtifactUI.GetEquippedArtifactInfo();
+	if(pointsSpent == nil) then return; end
+	local numPointsAvailableToSpend, xp , xpForNextPoint = MainMenuBar_GetNumArtifactTraitsPurchasableFromXP(pointsSpent, totalXP, artifactTier);
 
 	apStats.currentPower = xp;
 	apStats.powerNextLevel = xpForNextPoint;

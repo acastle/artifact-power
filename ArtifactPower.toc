@@ -1,4 +1,4 @@
-## Interface: 70100
+## Interface: 70200
 ## Title: Artifact Power
 ## Version: 1.2.5
 ## Author: Dorwido
